@@ -15,7 +15,7 @@ test("Should sort descending by title a-z if desc true", () => {
   expect(mockData[1].Title).toBe("Interstellar");
 });
 
-test("Should not sort by title", () => {
+test("Should not sort", () => {
   let mockData: IMovie[] = [
     { Title: "ABC", imdbID: "1", Type: "", Poster: "", Year: "" },
     { Title: "Interstellar", imdbID: "1", Type: "", Poster: "", Year: "" },

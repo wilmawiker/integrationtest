@@ -24,8 +24,11 @@ jest.mock("axios", () => ({
 }));
 
 describe("createHTML", () => {
+  beforeEach(() => {
+    jest.resetModules();
+    jest.restoreAllMocks();
+  });
   test("Should create HTML for list", async () => {
-    //Arrange
     document.body.innerHTML = `<div id="movie-container"></div>`;
     let container: HTMLDivElement = document.getElementById(
       "movie-container"
@@ -34,10 +37,8 @@ describe("createHTML", () => {
     let searchText: string = "Interstellar";
     let movies = await serviceFunctions.getData(searchText);
 
-    //Act
     await functions.createHtml(movies, container);
 
-    //Assert
     expect(document.querySelectorAll("div.movie").length).toBe(1);
     expect(document.querySelectorAll("h3").length).toBe(1);
     expect(document.querySelectorAll("img").length).toBe(1);
@@ -45,6 +46,10 @@ describe("createHTML", () => {
 });
 
 describe("displayError", () => {
+  beforeEach(() => {
+    jest.resetModules();
+    jest.restoreAllMocks();
+  });
   test("should change innerhtml", async () => {
     document.body.innerHTML = `<div id="movie-container"></div>`;
     let container: HTMLDivElement = document.getElementById(
@@ -58,8 +63,11 @@ describe("displayError", () => {
 });
 
 describe("handleSubmit", () => {
+  beforeEach(() => {
+    jest.resetModules();
+    jest.restoreAllMocks();
+  });
   test("should get input", async () => {
-    //Arrange
     document.body.innerHTML = `
     <input type="text" id="searchText" placeholder="Skriv titel här" />
     <div id="movie-container"></div>
@@ -67,17 +75,14 @@ describe("handleSubmit", () => {
 
     let movies: IMovie[] = [];
 
-    let searchText: string = "Sebbe";
+    let searchText: string = "Interstellar";
     movies = await serviceFunctions.getData(searchText);
 
-    //Act
     functions.handleSubmit();
 
-    //Assert
     expect(movies.length).toBeGreaterThan(0);
   });
   test("should call displayNoResult", async () => {
-    //Arrange
     let spy = jest.spyOn(functions, "displayNoResult").mockReturnValue();
     document.body.innerHTML = `
     <input type="text" id="searchText" placeholder="Skriv titel här" />
@@ -89,25 +94,29 @@ describe("handleSubmit", () => {
     let searchText: string = "";
     movies = await serviceFunctions.getData(searchText);
 
-    //Act
     functions.handleSubmit();
 
-    //Assert
     expect(spy).toHaveBeenCalled();
   });
 });
 
-test("should call handleSubmit", () => {
-  let spy = jest.spyOn(functions, "handleSubmit").mockReturnThis();
+describe("init", () => {
+  beforeEach(() => {
+    jest.resetModules();
+    jest.restoreAllMocks();
+  });
+  test("should call handleSubmit", () => {
+    let spy = jest.spyOn(functions, "handleSubmit").mockReturnThis();
 
-  document.body.innerHTML = `<form id="searchForm">
+    document.body.innerHTML = `<form id="searchForm">
     <input type="text" id="searchText" placeholder="Skriv titel här" />
     <button type="submit" id="search">Sök</button>
   </form>`;
 
-  functions.init();
+    functions.init();
 
-  (document.getElementById("searchForm") as HTMLFormElement)?.submit();
+    (document.getElementById("searchForm") as HTMLFormElement)?.submit();
 
-  expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+  });
 });
